@@ -1326,3 +1326,9 @@ Como extensión técnica del **SOP-MILIO-004**, el script `~/kayn/bin/backup_sta
 
 - **Aprobado por:** 
 - **Cargo:** 
+
+---
+
+## **14. Descargo Legal y Atribución de Marcas (Disclaimer)**
+
+Milio y Gekko son marcas registradas de Riot Games, Inc. Este proyecto no está respaldado por Riot Games y no refleja las opiniones ni los puntos de vista de Riot Games ni de nadie oficialmente involucrado en la producción o administración de sus propiedades.
