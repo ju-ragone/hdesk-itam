@@ -1,0 +1,12 @@
+.env
+.*.swp
+*.swp
+*~
+backups/
+*.sql
+*.sql.gz
+logs/
+*.log
+docs/.PASS
+reporte_*.txt
+*kate-swp

@@ -1,0 +1,85 @@
+services:
+  snipe-mysql:
+    image: mariadb:10.11
+    container_name: snipe-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - snipedb-data:/var/lib/mysql
+
+  snipe-it:
+    image: snipe/snipe-it:latest
+    container_name: snipe-it
+    restart: unless-stopped
+    depends_on:
+      - snipe-mysql
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    volumes:
+      - snipeit-data:/var/lib/snipeit
+
+  glpi-mysql:
+    image: mariadb:10.11
+    container_name: glpi-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${GLPI_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${GLPI_DB_NAME}
+      MYSQL_USER: ${GLPI_DB_USER}
+      MYSQL_PASSWORD: ${GLPI_DB_PASSWORD}
+    volumes:
+      - glpi-db-data:/var/lib/mysql
+
+  glpi:
+    image: diouxx/glpi:latest
+    container_name: glpi
+    restart: unless-stopped
+    depends_on:
+      - glpi-mysql
+    ports:
+      - "9080:80"
+    environment:
+      MARIADB_HOST: glpi-mysql
+      MARIADB_PORT: 3306
+      MARIADB_DATABASE: ${GLPI_DB_NAME}
+      MARIADB_USER: ${GLPI_DB_USER}
+      MARIADB_PASSWORD: ${GLPI_DB_PASSWORD}
+    volumes:
+      - glpi-data:/var/www/html/glpi
+
+  kanban:
+    image: kanboard/kanboard:latest
+    container_name: kanban
+    restart: unless-stopped
+    ports:
+      - "7080:80"
+    environment:
+      PHP_MEMORY_LIMIT: 512M
+    volumes:
+      - kanban-data:/var/www/app/data
+      - kanban-plugins:/var/www/app/plugins
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  snipedb-data:
+  snipeit-data:
+  glpi-db-data:
+  glpi-data:
+  kanban-data:
+  kanban-plugins:
+  uptime-kuma-data:
